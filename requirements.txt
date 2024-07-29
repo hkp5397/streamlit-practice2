@@ -1,6 +1,3 @@
-image
-Nominatim
-GeocoderTimedOut
 Pillow
 geopy
 streamlit
