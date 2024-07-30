@@ -1,30 +1,54 @@
-import streamlit as st
-from PIL import Image
-from ImageMetadataProcessor import ImageMetadataProcessor
+# main.py
 
-# Streamlit 애플리케이션 제목
-st.title("이미지 파일 메타데이터 추출")
+import os
+from ImageProcessor import ImageProcessor
+from ImageCaptionWriter import ImageCaptionWriter
 
-# 파일 업로드 위젯
-uploaded_files = st.file_uploader("이미지 파일을 업로드하세요.", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+def main():
+    openai_api_key = input("OpenAI API 키를 입력하세요: ")
+    if not openai_api_key:
+        print("OpenAI API 키가 입력되지 않았습니다.")
+        return
 
-if uploaded_files:
-    for uploaded_file in uploaded_files:
-        image = Image.open(uploaded_file)
-        st.image(image, caption="업로드된 이미지", use_column_width=True)
-
-        # 임시 파일로 저장하여 ImageMetadataProcessor에 전달
-        with open(uploaded_file.name, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-
-        # 메타데이터 처리기 생성 및 처리
-        processor = ImageMetadataProcessor(uploaded_file.name)
-        processor.process()
-
-        # 결과 출력
-        st.write("추출된 EXIF 데이터:", processor.exif_data)
-        st.write("라벨링된 EXIF 데이터:", processor.labeled_exif)
-        if processor.location_info:
-            st.write("위치 정보:", processor.location_info)
+    image_paths = []
+    while True:
+        image_path = input("이미지 파일 경로를 입력하세요 (종료하려면 빈 줄 입력): ")
+        if not image_path:
+            break
+        if os.path.exists(image_path):
+            image_paths.append(image_path)
         else:
-            st.write("위치 정보를 가져올 수 없습니다.")
+            print(f"파일을 찾을 수 없습니다: {image_path}")
+
+    if not image_paths:
+        print("처리할 이미지가 없습니다.")
+        return
+
+    processor = ImageProcessor(openai_api_key)
+    writer = ImageCaptionWriter(openai_api_key)
+    
+    for image_path in image_paths:
+        result = processor.process_image(image_path)
+        print(f"\n이미지: {result['image_path']}")
+        print("메타데이터:")
+        print(f"  EXIF 데이터: {result['metadata']['exif_data']}")
+        print(f"  라벨링된 EXIF: {result['metadata']['labeled_exif']}")
+        print(f"  위치 정보: {result['metadata']['location_info']}")
+        print(f"생성된 캡션: {result['caption']}")
+
+        # 사용자로부터 추가 정보 입력 받기
+        user_context = writer.get_user_context()
+
+        # 이야기 작성
+        story = writer.write_story(result['caption'], result['metadata'], user_context)
+        print("\n생성된 글:")
+        print(story)
+        print(f"\n글자 수: {len(story)}")
+
+        # 해시태그 생성
+        hashtags = writer.generate_hashtags(story)
+        print("\n생성된 해시태그:")
+        print(hashtags)
+
+if __name__ == "__main__":
+    main()
