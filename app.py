@@ -29,8 +29,10 @@ def main():
 
         result = processor.process_image(image_path)
         st.image(image_path, caption=result['caption'])
-        st.write("메타데이터:")
-        st.write(result['metadata'])
+        
+        # 메타데이터 화면 출력 부분 주석 처리 (07.30 16:30)
+        # st.write("메타데이터:")
+        # st.write(result['metadata'])
 
         user_context = writer.get_user_context()
         story = writer.write_story(result['caption'], result['metadata'], user_context)
