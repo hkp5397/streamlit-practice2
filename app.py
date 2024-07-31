@@ -8,7 +8,6 @@ from ImageCaptionWriter import ImageCaptionWriter
 def main():
     st.title("이미지 캡션 작성기")
 
-
     openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
     if not openai_api_key:
         st.warning("OpenAI API 키가 입력되지 않았습니다.")
