@@ -119,15 +119,13 @@ class ImageCaptionWriter:
             """
 
         try:
-            response = self.client.ChatCompletion.create(
+            response = self.client.Completion.create(
                 model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": f"당신은 여러 이미지의 정보를 종합하여 하나의 연결된 {writing_style}을(를) 작성하는 전문 작가입니다."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=writing_length * 2  # 토큰 수는 대략 글자 수의 2배로 설정
+                prompt=prompt,
+                max_tokens=writing_length * 2,  # 토큰 수는 대략 글자 수의 2배로 설정
+                temperature=0.7
             )
-            return response.choices[0].message['content']
+            return response.choices[0].text.strip()
         except Exception as e:
             st.error(f"글 작성 중 오류 발생: {e}")
             return "글을 작성할 수 없습니다."
@@ -144,13 +142,11 @@ class ImageCaptionWriter:
         try:
             response = self.client.ChatCompletion.create(
                 model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": "당신은 주어진 내용에 맞는 적절한 해시태그를 생성하는 전문가입니다."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=100
+                prompt=prompt,
+                max_tokens=100,
+                temperature=0.7
             )
-            return response.choices[0].message['content']
+            return response.choices[0].text.strip()
         except Exception as e:
             st.error(f"해시태그 생성 중 오류 발생: {e}")
             return "해시태그를 생성할 수 없습니다."
