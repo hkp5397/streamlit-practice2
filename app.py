@@ -1,5 +1,3 @@
-# main.py
-
 import os
 import streamlit as st
 from ImageProcessor import ImageProcessor
@@ -17,8 +15,11 @@ def main():
     uploaded_files = st.file_uploader("이미지 파일을 업로드하세요", accept_multiple_files=True, type=['png', 'jpg', 'jpeg'])
     
     if uploaded_files:
+        temp_dir = "tempDir"
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
         for uploaded_file in uploaded_files:
-            image_path = os.path.join("tempDir", uploaded_file.name)
+            image_path = os.path.join(temp_dir, uploaded_file.name)
             with open(image_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
             image_paths.append(image_path)
