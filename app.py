@@ -44,8 +44,9 @@ def main():
         })
         
     # 사용자로부터 모든 이미지에 대한 추가 정보 입력 받기
-    user_context = st.text_area("이미지들에 대한 추가 정보를 입력하세요:")
-    
+    # user_context = st.text_area("이미지들에 대한 추가 정보를 입력하세요:")
+    user_context = writer.get_user_context()
+
     # 모든 이미지 정보를 종합하여 하나의 이야기 작성
     if st.button("이야기 생성"):
         story = writer.write_story(image_data_list, user_context)
