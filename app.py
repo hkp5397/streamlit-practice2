@@ -59,7 +59,7 @@ def main():
             hashtags = writer.generate_hashtags(story)
             st.subheader("생성된 해시태그:")
             st.write(hashtags)
-        except TypeError as e:
+        except Exception as e:
             st.error(f"이야기 생성 중 오류 발생: {e}")
 
 if __name__ == "__main__":
