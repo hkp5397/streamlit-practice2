@@ -1,8 +1,11 @@
-from openai import OpenAI
+import openai
+import streamlit as st
+from datetime import datetime
 
 class ImageCaptionWriter:
     def __init__(self, openai_api_key):
-        self.client = OpenAI(api_key=openai_api_key)
+        openai.api_key = openai_api_key
+        self.client = openai
 
     def get_writing_style(self):
         writing_style = st.selectbox(
@@ -29,7 +32,7 @@ class ImageCaptionWriter:
         writing_length = self.get_writing_length()
 
         # 이미지를 시간순으로 정렬
-        sorted_image_data = sorted(image_data_list, key=lambda x: x['metadata']['labeled_exif'].get('Date/Time', '1900-01-01 00:00:00'))
+        sorted_image_data = sorted(image_data_list, key=lambda x: datetime.strptime(x['metadata']['labeled_exif'].get('Date/Time', '1900:01:01 00:00:00'), '%Y:%m:%d %H:%M:%S'))
 
         context_prompt = f"사용자 제공 추가 정보: {user_context}" if user_context else "사용자가 제공한 추가 정보 없음"
 
@@ -116,7 +119,7 @@ class ImageCaptionWriter:
             """
 
         try:
-            response = self.client.chat.completions.create(
+            response = self.client.ChatCompletion.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": f"당신은 여러 이미지의 정보를 종합하여 하나의 연결된 {writing_style}을(를) 작성하는 전문 작가입니다."},
@@ -124,7 +127,7 @@ class ImageCaptionWriter:
                 ],
                 max_tokens=writing_length * 2  # 토큰 수는 대략 글자 수의 2배로 설정
             )
-            return response.choices[0].message.content
+            return response.choices[0].message['content']
         except Exception as e:
             st.error(f"글 작성 중 오류 발생: {e}")
             return "글을 작성할 수 없습니다."
@@ -139,7 +142,7 @@ class ImageCaptionWriter:
         """
 
         try:
-            response = self.client.chat.completions.create(
+            response = self.client.ChatCompletion.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "당신은 주어진 내용에 맞는 적절한 해시태그를 생성하는 전문가입니다."},
@@ -147,7 +150,7 @@ class ImageCaptionWriter:
                 ],
                 max_tokens=100
             )
-            return response.choices[0].message.content
+            return response.choices[0].message['content']
         except Exception as e:
             st.error(f"해시태그 생성 중 오류 발생: {e}")
             return "해시태그를 생성할 수 없습니다."
