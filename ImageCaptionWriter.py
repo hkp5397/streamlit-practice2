@@ -20,8 +20,8 @@ class ImageCaptionWriter:
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
         messages = self._create_messages(image_data_list, user_context, writing_style)
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            # model="gpt-4o-mini"
+            # model="gpt-3.5-turbo",
+            model="gpt-4o-mini"
             messages=messages,
             max_tokens=writing_length,
             temperature=temperature,
@@ -41,8 +41,8 @@ class ImageCaptionWriter:
 
     def generate_hashtags(self, story):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            # model="gpt-4o-mini",
+            # model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "다음 글을 기반으로 해시태그를 생성하세요:"},
                 {"role": "user", "content": story},
