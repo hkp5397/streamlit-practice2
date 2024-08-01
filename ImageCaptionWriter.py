@@ -1,4 +1,5 @@
 import openai
+import streamlit as st
 
 class ImageCaptionWriter:
     def __init__(self, openai_api_key):
