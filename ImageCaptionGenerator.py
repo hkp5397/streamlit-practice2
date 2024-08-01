@@ -16,7 +16,7 @@ class ImageCaptionGenerator:
                     img = img.convert('RGB')
                 
                 # 이미지 크기 조정 (필요한 경우)
-                max_size = (1024, 1024)  # OpenAI API 권장 최대 크기
+                max_size = (512, 512)  # OpenAI API 권장 최대 크기
                 img.thumbnail(max_size, Image.LANCZOS)
                 
                 # 이미지를 JPEG 형식의 바이트 스트림으로 변환
