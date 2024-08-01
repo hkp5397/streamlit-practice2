@@ -20,8 +20,8 @@ class ImageCaptionWriter:
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
         prompt = self._create_prompt(image_data_list, user_context, writing_style)
         response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
+            model="gpt-4o-mini",
+            messages=prompt,
             max_tokens=writing_length,
             temperature=temperature,
         )
@@ -41,8 +41,12 @@ class ImageCaptionWriter:
 
     def generate_hashtags(self, story):
         response = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=f"다음 글을 기반으로 해시태그를 생성하세요:\n\n{story}",
+            model="gpt-4o-mini",
+            # prompt=f"다음 글을 기반으로 해시태그를 생성하세요:\n\n{story}",
+            messages=[
+                {"role": "system", "content": "다음 글을 기반으로 해시태그를 생성하세요:"},
+                {"role": "user", "content": story},
+            ],
             max_tokens=50,
             temperature=0.5,
         )
