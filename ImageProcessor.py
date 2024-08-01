@@ -1,5 +1,3 @@
-# image_processor.py
-
 from ImageMetadataProcessor import ImageMetadataProcessor
 from ImageCaptionGenerator import ImageCaptionGenerator
 

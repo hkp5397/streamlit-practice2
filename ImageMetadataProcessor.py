@@ -1,5 +1,3 @@
-# image_metadata_processor.py
-
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from geopy.geocoders import Nominatim
@@ -71,20 +69,9 @@ class ImageMetadataProcessor:
         if "Latitude" in labeled_exif and "Longitude" in labeled_exif:
             try:
                 location = self.geolocator.reverse(f"{labeled_exif['Latitude']}, {labeled_exif['Longitude']}")
-                if location:
-                    address = location.raw['address']
-                    location_info = {
-                        "full_address": location.address,
-                        "country": address.get('country', ''),
-                        "state": address.get('state', ''),
-                        "city": address.get('city', address.get('town', address.get('village', ''))),
-                        "suburb": address.get('suburb', ''),
-                        "road": address.get('road', ''),
-                        "house_number": address.get('house_number', ''),
-                        "postcode": address.get('postcode', '')
-                    }
-            except GeocoderTimedOut:
-                print("지오코딩 서비스 시간 초과. 다시 시도해주세요.")
+                location_info = location.raw
+            except GeocoderTimedOut as e:
+                print(f"Geocoding timed out: {e}")
             except Exception as e:
-                print(f"위치 정보를 가져오는 데 실패했습니다: {e}")
+                print(f"Geocoding error: {e}")
         return location_info
