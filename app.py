@@ -82,7 +82,7 @@ def main():
             st.download_button(
                 label="파일 저장하기",
                 data = content,
-                file_name = filename,
+                file_name = filename + '.txt',
                 mime = "text/plain"
             )
 
@@ -119,7 +119,7 @@ def main():
                 st.download_button(
                     label="파일 저장하기",
                     data = content,
-                    file_name = filename,
+                    file_name = filename  + '.txt',
                     mime = "text/plain"
                 )
         else:
@@ -135,7 +135,7 @@ def main():
                 st.download_button(
                     label="파일 저장하기",
                     data = content,
-                    file_name = filename,
+                    file_name = filename  + '.txt',
                     mime = "text/plain"
                 )
     else:
