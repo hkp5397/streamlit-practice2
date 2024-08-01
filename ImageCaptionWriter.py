@@ -40,7 +40,7 @@ class ImageCaptionWriter:
         return messages
 
     def generate_hashtags(self, story):
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completion.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=[
