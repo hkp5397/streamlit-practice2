@@ -1,5 +1,7 @@
 from openai import OpenAI
 import base64
+from PIL import Image
+import io
 
 class ImageCaptionGenerator:
     def __init__(self, openai_api_key):
@@ -7,8 +9,20 @@ class ImageCaptionGenerator:
 
     def generate_caption(self, image_path, metadata):
         try:
-            with open(image_path, "rb") as image_file:
-                base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+            # 이미지 열기 및 처리
+            with Image.open(image_path) as img:
+                # RGBA 모드인 경우 RGB로 변환
+                if img.mode == 'RGBA':
+                    img = img.convert('RGB')
+                
+                # 이미지 크기 조정 (필요한 경우)
+                max_size = (1024, 1024)  # OpenAI API 권장 최대 크기
+                img.thumbnail(max_size, Image.LANCZOS)
+                
+                # 이미지를 JPEG 형식의 바이트 스트림으로 변환
+                buffer = io.BytesIO()
+                img.save(buffer, format="JPEG", quality=85)
+                base64_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
             prompt = f"""이 이미지를 설명해주세요. 다음 메타데이터도 참고하세요:
             날짜/시간: {metadata['labeled_exif'].get('Date/Time', 'N/A')}
@@ -16,7 +30,7 @@ class ImageCaptionGenerator:
             """
 
             response = self.client.chat.completions.create(
-                model="gpt-4",  # 모델명 변경
+                model="gpt-4o-mini",  # 비전 모델 사용
                 messages=[
                     {
                         "role": "user",
