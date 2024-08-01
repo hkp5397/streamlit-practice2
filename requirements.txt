@@ -1,5 +1,5 @@
 Pillow
 geopy
 streamlit
-openai>=1.37.1
+openai==0.28.0
 Path
