@@ -21,7 +21,7 @@ class ImageCaptionWriter:
         messages = self._create_messages(image_data_list, user_context, writing_style)
         response = openai.ChatCompletion.create(
             # model="gpt-3.5-turbo",
-            model="gpt-4o-mini"
+            model="gpt-4o-mini",
             messages=messages,
             max_tokens=writing_length,
             temperature=temperature,
