@@ -4,12 +4,19 @@ from ImageProcessor import ImageProcessor
 from ImageCaptionWriter import ImageCaptionWriter
 from datetime import datetime
 
-def save_to_file(content, directory, filename):
-    if not filename.endswith('.txt'):
-        filename += '.txt'
-    file_path = os.path.join(directory, filename)
+def get_downloads_folder():
+    home = Path.home()
+    downloads_folder = home / "Downloads"
+    return downloads_folder
+
+def save_to_file(content, filename):
+    downloads_folder = get_downloads_folder()
+    if not downloads_folder.exists():
+            st.error(f"다운로드 폴더가 존재하지 않습니다. {downloads_folder}")
+            return
+    file_path = downloads_folder / (filename + ".txt")
     try:
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding='utf-8') as f:
             f.write(content)
         st.success(f"내용이 {file_path}에 저장되었습니다.")
     except Exception as e:
@@ -63,14 +70,13 @@ def main():
 
     if choice == '캡션':
         # 5-1) 캡션만 저장
-        save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:")
         filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
         if st.button("저장하기"):
             content = ""
             for data in image_data_list:
                 content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
                 content += f"이미지에 대한 캡션: {data['caption']}\n\n"
-            save_to_file(content, save_directory, filename)
+            save_to_file(content, filename)
     elif choice == '글':
         # 5-2) 글 생성 준비
         user_context = writer.get_user_context()
@@ -92,7 +98,6 @@ def main():
             st.write("생성된 해시태그:")
             st.write(hashtags)
             
-            save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:", key="save_directory_hashtags")
             filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_hashtags")
             if st.button("저장하기", key="save_hashtags"):
                 content = ""
@@ -101,10 +106,9 @@ def main():
                     content += f"이미지에 대한 캡션: {data['caption']}\n\n"
                 content += f"글: {story}\n\n"
                 content += f"해시태그: {hashtags}\n"
-                save_to_file(content, save_directory, filename)
+                save_to_file(content, filename)
         else:
             # 8-1) 글까지만 저장
-            save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:", key="save_directory_story")
             filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_story")
             if st.button("저장하기", key="save_story"):
                 content = ""
@@ -112,12 +116,12 @@ def main():
                     content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
                     content += f"이미지에 대한 캡션: {data['caption']}\n\n"
                 content += f"글: {story}\n"
-                save_to_file(content, save_directory, filename)
+                save_to_file(content, filename)
     else:
         st.warning("잘못된 선택입니다. 프로그램을 종료합니다.")
 
-    # 9) 프로그램 종료
-    st.write("프로그램을 종료합니다.")
+    # # 9) 프로그램 종료
+    # st.write("프로그램을 종료합니다.")
 
 if __name__ == "__main__":
     main()
