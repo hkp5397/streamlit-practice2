@@ -25,10 +25,11 @@ def main():
         return
 
     # 2) 이미지 업로드 받기
-    uploaded_files = st.file_uploader("이미지 파일을 업로드하세요", accept_multiple_files=True)
-    if not uploaded_files:
-        st.warning("처리할 이미지를 업로드해주세요.")
-        return
+    uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+
+    if uploaded_files:
+        if not os.path.exists("temp"):
+            os.makedirs("temp")
 
     image_paths = []
     for uploaded_file in uploaded_files:
