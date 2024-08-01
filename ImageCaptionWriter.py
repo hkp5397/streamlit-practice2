@@ -18,31 +18,31 @@ class ImageCaptionWriter:
         return st.slider("생성된 글의 창의성 정도를 선택하세요 (0.0 - 1.0):", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
-        prompt = self._create_prompt(image_data_list, user_context, writing_style)
+        messages = self._create_messages(image_data_list, user_context, writing_style)
         response = openai.ChatCompletion.create(
+            # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
-            messages=prompt,
+            messages=messages,
             max_tokens=writing_length,
             temperature=temperature,
         )
-        story = response.choices[0].text.strip()
+        story = response.choices[0]['message']['content'].strip()
         return story
 
-    def _create_prompt(self, image_data_list, user_context, writing_style):
-        prompt = f"다음 이미지를 기반으로 {writing_style} 스타일로 글을 작성하세요:\n\n"
+    def _create_messages(self, image_data_list, user_context, writing_style):
+        messages = [
+            {"role": "system", "content": f"다음 이미지를 기반으로 {writing_style} 스타일로 글을 작성하세요:"}
+        ]
         for data in image_data_list:
-            prompt += f"이미지 경로: {data['image_path']}\n"
-            prompt += f"이미지에 대한 캡션: {data['caption']}\n"
-            if 'metadata' in data:
-                prompt += f"메타데이터: {data['metadata']}\n"
+            messages.append({"role": "user", "content": f"이미지 경로: {data['image_path']}\n이미지에 대한 캡션: {data['caption']}\n메타데이터: {data.get('metadata', '')}"})
         if user_context:
-            prompt += f"\n추가 사용자 입력: {user_context}\n"
-        return prompt
+            messages.append({"role": "user", "content": f"추가 사용자 입력: {user_context}"})
+        return messages
 
     def generate_hashtags(self, story):
         response = openai.ChatCompletion.create(
+            # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
-            # prompt=f"다음 글을 기반으로 해시태그를 생성하세요:\n\n{story}",
             messages=[
                 {"role": "system", "content": "다음 글을 기반으로 해시태그를 생성하세요:"},
                 {"role": "user", "content": story},
@@ -50,5 +50,5 @@ class ImageCaptionWriter:
             max_tokens=50,
             temperature=0.5,
         )
-        hashtags = response.choices[0].text.strip()
+        hashtags = response.choices[0]['message']['content'].strip()
         return hashtags
