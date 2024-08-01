@@ -16,7 +16,7 @@ class ImageCaptionGenerator:
             """
 
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",  # 모델명 변경
+                model="gpt-4",  # 모델명 변경
                 messages=[
                     {
                         "role": "user",
