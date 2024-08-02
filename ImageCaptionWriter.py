@@ -1,5 +1,6 @@
 from openai import OpenAI
 import streamlit as st
+import datetime
 
 class ImageCaptionWriter:
     def __init__(self, openai_api_key):
@@ -152,7 +153,7 @@ class ImageCaptionWriter:
 
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
-        sorted_image_data = sorted(image_data_list, key=lambda x: parse_date(x['metadata'].get('labeled_exif', {}).get('DateTime', '1900-01-01 00:00:00')))
+        sorted_image_data = sorted(image_data_list, key=lambda x: self.parse_date(x['metadata'].get('labeled_exif', {}).get('DateTime', '1900-01-01 00:00:00')))
 
         age, gender, writing_tone, writing_tone_description = self.get_user_info()
         
