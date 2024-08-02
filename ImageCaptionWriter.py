@@ -187,9 +187,25 @@ class ImageCaptionWriter:
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=temperature,
-                max_tokens=writing_length
+                max_tokens=writing_length            
         )
-            return response.choices[0].message.content
+            story = response.choices[0].message.content
+            return story
         except Exception as e:
             st.error(f"글 생성 중 오류 발생: {e}")
             return "글을 생성할 수 없습니다."
+    
+
+    def generate_hashtags(self, story):
+        response = self.client.chat.completions.create(
+            # model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "다음 글을 기반으로 해시태그를 생성하세요:"},
+                {"role": "user", "content": story},
+            ],
+            max_tokens=50,
+            temperature=0.5,
+        )
+        hashtags = response.choices[0].message.content.strip()
+        return hashtags
