@@ -1,6 +1,6 @@
 from openai import OpenAI
 import streamlit as st
-import datetime
+from datetime import datetime
 
 class ImageCaptionWriter:
     def __init__(self, openai_api_key):
