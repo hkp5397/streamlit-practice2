@@ -34,7 +34,7 @@ class ImageCaptionWriter:
             model="gpt-4o-mini",
             messages=messages,
             max_tokens=writing_length,
-            temperature=temperature,
+            temperature=temperature
         )
         story = response.choices[0].message.content.strip()
         return story
