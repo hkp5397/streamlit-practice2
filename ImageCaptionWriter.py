@@ -1,4 +1,4 @@
-import openai
+from openai import openAI
 import streamlit as st
 
 class ImageCaptionWriter:
