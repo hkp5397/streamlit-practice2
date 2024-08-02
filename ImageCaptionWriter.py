@@ -145,7 +145,7 @@ class ImageCaptionWriter:
         
         return age, gender, writing_tone, writing_tone_description
 
-    def parse_date(date_string):
+    def parse_date(self, date_string):
         try:
             return datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
         except ValueError:
