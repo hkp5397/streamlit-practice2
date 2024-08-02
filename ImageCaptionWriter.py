@@ -27,7 +27,7 @@ class ImageCaptionWriter:
             max_tokens=writing_length,
             temperature=temperature,
         )
-        story = response.choices[0].message["content"].strip()
+        story = response.choices[0].message.content.strip()
         return story
 
     def _create_messages(self, image_data_list, user_context, writing_style):
@@ -51,5 +51,5 @@ class ImageCaptionWriter:
             max_tokens=50,
             temperature=0.5,
         )
-        hashtags = response.choices[0].message["content"].strip()
+        hashtags = response.choices[0].message.content.strip()
         return hashtags
