@@ -3,7 +3,8 @@ import streamlit as st
 
 class ImageCaptionWriter:
     def __init__(self, openai_api_key):
-        openai.api_key = openai_api_key
+        # openai.api_key = openai_api_key
+        self.client = OpenAI(api_key=openai_api_key)
 
     def get_user_context(self):
         return st.text_area("사용자 입력 (선택 사항):", "")
@@ -19,7 +20,7 @@ class ImageCaptionWriter:
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
         messages = self._create_messages(image_data_list, user_context, writing_style)
-        response = openai.chat.completion.create(
+        response = self.client.chat.completion.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=messages,
@@ -40,7 +41,7 @@ class ImageCaptionWriter:
         return messages
 
     def generate_hashtags(self, story):
-        response = openai.chat.completion.create(
+        response = self.client.chat.completion.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=[
