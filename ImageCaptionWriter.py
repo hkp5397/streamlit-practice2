@@ -28,15 +28,13 @@ class ImageCaptionWriter:
 
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature, age, gender):
-        messages = self._create_messages(image_data_list, user_context, writing_style)
+        messages = self._create_messages(image_data_list, user_context, writing_style, age, gender)
         response = self.client.chat.completions.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=messages,
             max_tokens=writing_length,
             temperature=temperature,
-            age=age,
-            gender=gender
         )
         story = response.choices[0].message.content.strip()
         return story
