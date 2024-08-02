@@ -21,10 +21,10 @@ class ImageCaptionWriter:
         return st.slider("생성된 글의 창의성 정도를 선택하세요 (0.0 - 1.0):", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
 
     def get_user_info(self):
-        age = st.number_input("사용자의 나이를 입력해주세요: ", min_value=0, max_value=120, step=1) #여기부터
-
-        gender_options = {"1": "남성", "2": "여성"}
-        gender_choice = st.radio("사용자의 성별을 선택해주세요")
+        age = st.number_input("사용자의 나이를 입력해주세요: ", min_value=0, max_value=120, step=1)
+        gender_options = ["남성", "여성"]
+        gender_choice = st.radio("사용자의 성별을 선택해주세요", gender_options)
+        return age, gender_choice
 
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
