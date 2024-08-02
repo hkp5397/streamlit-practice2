@@ -144,38 +144,51 @@ class ImageCaptionWriter:
         
         return age, gender, writing_tone, writing_tone_description
 
-    def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature, age, gender):
-        messages = self._create_messages(image_data_list, user_context, writing_style, age, gender)
-        response = self.client.chat.completions.create(
-            # model="gpt-3.5-turbo",
-            model="gpt-4o-mini",
-            messages=messages,
-            max_tokens=writing_length,
-            temperature=temperature
-        )
-        story = response.choices[0].message.content.strip()
-        return story
+    def parse_date(date_string):
+        try:
+            return datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+        except ValueError:
+            return datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
 
-    def _create_messages(self, image_data_list, user_context, writing_style):
-        messages = [
-            {"role": "system", "content": f"다음 이미지를 기반으로 {writing_style} 스타일로 글을 작성하세요:"}
-        ]
-        for data in image_data_list:
-            messages.append({"role": "user", "content": f"이미지 경로: {data['image_path']}\n이미지에 대한 캡션: {data['caption']}\n메타데이터: {data.get('metadata', '')}"})
-        if user_context:
-            messages.append({"role": "user", "content": f"추가 사용자 입력: {user_context}"})
-        return messages
 
-    def generate_hashtags(self, story):
-        response = self.client.chat.completions.create(
-            # model="gpt-3.5-turbo",
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "다음 글을 기반으로 해시태그를 생성하세요:"},
-                {"role": "user", "content": story},
-            ],
-            max_tokens=50,
-            temperature=0.5,
+    def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
+        sorted_image_data = sorted(image_data_list, key=lambda x: parse_date(x['metadata'].get('labeled_exif', {}).get('DateTime', '1900-01-01 00:00:00')))
+
+        age, gender, writing_tone, writing_tone_description = self.get_user_info()
+        
+        user_info = f"""저는 {age}살 {gender}입니다. 
+        [{writing_tone}] 문체를 적용하여 {writing_style}을 작성해주세요.
+        문체 설명: {writing_tone_description}"""
+
+        prompt = f"""다음 이미지들과 메타데이터를 기반으로 {writing_style}을 작성해주세요. 
+        글의 길이는 약 {writing_length}자로 작성해주세요.
+        추가 정보: {user_context}
+        {user_info}
+
+        주의사항:
+        1. 지정된 문체를 일관되게 유지해주세요.
+        2. 문체에 맞는 어휘와 표현을 사용해주세요.
+        3. 내용은 이미지와 메타데이터에 기반하되, 문체에 맞게 표현해주세요.
+
+        이미지 정보:
+        """
+
+        for data in sorted_image_data:
+            prompt += f"""
+            이미지: {data['image_path']}
+            캡션: {data['caption']}
+            날짜/시간: {data['metadata']['labeled_exif'].get('DateTime', 'N/A')}
+            위치: {data['metadata']['location_info'].get('full_address', 'N/A')}
+            """
+
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=writing_length
         )
-        hashtags = response.choices[0].message.content.strip()
-        return hashtags
+            return response.choices[0].message.content
+        except Exception as e:
+            st.error(f"글 생성 중 오류 발생: {e}")
+            return "글을 생성할 수 없습니다."
