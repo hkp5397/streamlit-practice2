@@ -92,8 +92,7 @@ def main():
         writing_style = writer.get_writing_style()
         writing_length = writer.get_writing_length()
         temperature = writer.get_temperature()
-        age = writer.get_user_info(age)
-        gender = writer.get_user_info(gender_choice)
+        age, gender = writer.get_user_info()
 
         # 6) 글 생성
         story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, age, gender)
