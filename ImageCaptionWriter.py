@@ -20,7 +20,7 @@ class ImageCaptionWriter:
 
     def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
         messages = self._create_messages(image_data_list, user_context, writing_style)
-        response = self.client.chat.completion.create(
+        response = self.client.chat.completions.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=messages,
@@ -41,7 +41,7 @@ class ImageCaptionWriter:
         return messages
 
     def generate_hashtags(self, story):
-        response = self.client.chat.completion.create(
+        response = self.client.chat.completions.create(
             # model="gpt-3.5-turbo",
             model="gpt-4o-mini",
             messages=[
