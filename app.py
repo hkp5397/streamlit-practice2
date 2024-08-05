@@ -71,6 +71,7 @@ def main():
             
     if (len(image_data_list) > 0):
         # 4) 캡션만 저장할지 글 생성할지 선택
+        st.write(f"st.session_state => {st.session_state.get('first_time')}")
         choice = st.radio("캡션만 저장하시겠습니까? 아니면 글을 생성하시겠습니까?", ("캡션", "글"), index=-1)
 
         if choice == '캡션':
