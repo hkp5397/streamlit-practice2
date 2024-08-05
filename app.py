@@ -92,9 +92,10 @@ def main():
         writing_style = writer.get_writing_style()
         writing_length = writer.get_writing_length()
         temperature = writer.get_temperature()
+        age, gender, writing_tone, writing_tone_description = writer.get_user.info()
 
         # 6) 글 생성
-        story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature)
+        story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, age, gender, writing_tone, writing_tone_description)
         st.write("생성된 글:")
         st.write(story)
 
