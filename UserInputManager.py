@@ -1,7 +1,14 @@
 from writing_styles import STYLE_SPECIFIC_INSTRUCTIONS
 from writing_tones import WRITING_TONES
+from pathlib import Path
 import streamlit as st
 import os
+
+def get_downloads_folder():
+    """사용자의 다운로드 폴더 경로를 반환합니다."""
+    home = Path.home()
+    downloads_folder = home / "Downloads"
+    return downloads_folder
 
 class UserInputManager:
     @staticmethod
@@ -49,7 +56,8 @@ class UserInputManager:
     @staticmethod
     def get_save_info():
         """파일 저장 정보를 입력받습니다."""
-        save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:")
+        # save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:")
+        save_directory = get_downloads_folder()
         filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
         
         if save_directory and filename:

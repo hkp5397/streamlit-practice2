@@ -7,11 +7,6 @@ from datetime import datetime
 from pathlib import Path
 import io
 
-def get_downloads_folder():
-    home = Path.home()
-    downloads_folder = home / "Downloads"
-    return downloads_folder
-
 def get_image_paths():
     uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
 
