@@ -25,7 +25,7 @@ def get_downloads_folder():
 #         st.error(f"파일 저장 중 오류 발생: {e}")
 
 def main():
-    st.title("사진(이미지) 캡션/글/해시태그 생성기")
+    st.title("이미지 캡션/글/해시태그 생성")
 
     # 1) API 키 입력 받기
     openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
