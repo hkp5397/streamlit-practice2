@@ -1,5 +1,6 @@
 from writing_styles import STYLE_SPECIFIC_INSTRUCTIONS
 from writing_tones import WRITING_TONES
+import streamlit as st
 import os
 
 class UserInputManager:
