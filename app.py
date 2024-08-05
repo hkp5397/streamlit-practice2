@@ -129,14 +129,25 @@ def create_content_for_saving(story, hashtags, image_paths):
 def main():
     st.title("이미지 기반 콘텐츠 생성기")
 
+    # API 키는 화면에서 직접 입력
+    openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
+    if not openai_api_key:
+        st.warning("OpenAI API 키를 입력해주세요.")
+        return
+
+    image_paths = get_image_paths()
+    if not image_paths:
+        st.write("처리할 이미지가 없습니다.")
+        return
+
     # 이미지 업로드
     image_paths = get_image_paths()
     if image_paths:
-        processor = ImageProcessor()
+        processor = ImageProcessor(openai_api_key)
         image_data_list = process_images(processor, image_paths)
 
         if image_data_list:
-            writer = ContentGenerator()
+            writer = ContentGenerator(openai_api_key)
             save_captions(image_data_list)
             story = generate_story(writer, image_data_list)
             hashtags = generate_hashtags(writer, story)
