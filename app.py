@@ -131,22 +131,26 @@ def main():
     st.title("이미지 처리 및 캡션 생성기")
 
     # API 키는 화면에서 직접 입력
-    openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password", key="api_key")
+    openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
+    if not openai_api_key:
+        st.warning("OpenAI API 키를 입력해주세요.")
+        return
 
-    if openai_api_key:
-        processor = ImageProcessor()  # DeepAI 제거
-        writer = ContentGenerator(openai_api_key)
-        
-        image_paths = get_image_paths()
+    image_paths = get_image_paths()
+    if not image_paths:
+        st.write("처리할 이미지가 없습니다.")
+        return
 
-        if image_paths:
-            image_data_list = process_images(processor, image_paths)
-
-            if image_data_list:
-                save_captions(image_data_list)
-                story = generate_story(writer, image_data_list)
-                hashtags = generate_hashtags(writer, story)
-                save_results(story, hashtags, image_paths)
+    processor = ImageProcessor(openai_api_key)
+    writer = ContentGenerator(openai_api_key)
+    
+    image_data_list = process_images(processor, image_paths)
+    
+    if image_data_list:
+        save_captions(image_data_list)
+        story = generate_story(writer, image_data_list)
+        hashtags = generate_hashtags(writer, story)
+        save_results(story, hashtags, image_paths)
 
 if __name__ == "__main__":
     main()
