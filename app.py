@@ -76,18 +76,21 @@ def main():
         if choice == '캡션만 저장':
             # 5-1) 캡션만 저장
             filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
-            if st.button("캡션 저장"):
-                content = ""
-                for data in image_data_list:
-                    content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                    content += f"이미지에 대한 캡션: {data['caption']}\n\n"
-                # save_to_file(content, filename)
-                st.download_button(
-                    label="파일 다운로드",
-                    data = content,
-                    file_name = filename + '.txt',
-                    mime = "text/plain"
-                )
+            
+            if len(filename) > 0:
+                
+                if st.button("캡션 저장"):
+                    content = ""
+                    for data in image_data_list:
+                        content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                        content += f"이미지에 대한 캡션: {data['caption']}\n\n"
+                    # save_to_file(content, filename)
+                    st.download_button(
+                        label="파일 다운로드",
+                        data = content,
+                        file_name = filename + '.txt',
+                        mime = "text/plain"
+                    )
 
         elif choice == '글 생성':
             # 5-2) 글 생성 준비
