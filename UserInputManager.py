@@ -10,66 +10,37 @@ class UserInputManager:
             "일기", "SNS 포스팅", "여행기", "중고 상품 판매용 설명글",
             "음식 후기", "제품 후기", "장소 방문 후기"
         ]
-        print("글쓰기 스타일을 선택해주세요:")
-        for idx, style in enumerate(styles, 1):
-            print(f"{idx}. {style}")
-        
-        return UserInputManager._get_valid_input(
-            prompt="선택 (1-7): ",
-            validation_func=lambda x: x in map(str, range(1, 8)),
-            error_message="잘못된 선택입니다. 1부터 7 사이의 숫자를 입력해주세요.",
-            transform_func=lambda x: styles[int(x) - 1]
-        )
+        style = st.selectbox("글쓰기 스타일을 선택해주세요:", styles)
+        return style
 
     @staticmethod
     def get_writing_length():
         """사용자로부터 원하는 글의 길이를 입력받습니다."""
-        return UserInputManager._get_valid_input(
-            prompt="원하는 글의 길이를 100자 단위로 입력해주세요 (최대 5000자): ",
-            validation_func=lambda x: x.isdigit() and 100 <= int(x) <= 5000 and int(x) % 100 == 0,
-            error_message="100에서 5000 사이의 100의 배수를 입력해주세요.",
-            transform_func=int
-        )
+        length = st.number_input("원하는 글의 길이를 100자 단위로 입력해주세요 (최대 5000자):", min_value=100, max_value=5000, step=100)
+        return int(length)
 
     @staticmethod
     def get_user_context():
         """사용자로부터 추가 정보를 입력받습니다."""
-        print("\n모든 이미지에 대한 추가 정보를 입력해주세요.")
-        print("예: 인물의 이름, 특별한 상황, 이벤트 등")
-        print("입력하지 않으려면 엔터를 눌러주세요.")
-        return input("추가 정보: ").strip()
+        context = st.text_area("모든 이미지에 대한 추가 정보를 입력해주세요.\n예: 인물의 이름, 특별한 상황, 이벤트 등\n입력하지 않으려면 빈 칸으로 두세요.")
+        return context.strip()
 
     @staticmethod
     def get_temperature():
         """사용자로부터 창의성 수준(temperature)을 입력받습니다."""
-        return UserInputManager._get_valid_input(
-            prompt="창의성 수준을 입력해주세요 (0 ~ 10, 0: 매우 일관된, 10: 매우 창의적): ",
-            validation_func=lambda x: x.replace('.', '', 1).isdigit() and 0 <= float(x) <= 10,
-            error_message="0에서 10 사이의 숫자를 입력해주세요.",
-            transform_func=lambda x: float(x) / 10
-        )
+        temperature = st.slider("창의성 수준을 입력해주세요 (0 ~ 10, 0: 매우 일관된, 10: 매우 창의적):", 0.0, 10.0, step=0.1)
+        return temperature / 10
 
     @staticmethod
     def get_user_info():
         """사용자의 나이, 성별, 글쓰기 톤을 입력받습니다."""
-        age = input("사용자의 나이를 입력해주세요: ")
+        age = st.text_input("사용자의 나이를 입력해주세요:")
         
-        gender = UserInputManager._get_valid_input(
-            prompt="사용자의 성별을 선택해주세요 (1: 남성, 2: 여성): ",
-            validation_func=lambda x: x in ['1', '2'],
-            error_message="잘못된 선택입니다. 1 또는 2를 입력해주세요.",
-            transform_func=lambda x: "남성" if x == '1' else "여성"
-        )
+        gender = st.radio("사용자의 성별을 선택해주세요:", options=["남성", "여성"])
         
-        print("\n문체를 선택해주세요:")
-        for key, (style, description, _) in WRITING_TONES.items():
-            print(f"{key}: {style} - {description}")
-        
-        writing_tone_choice = UserInputManager._get_valid_input(
-            prompt="문체 번호를 선택해주세요(기본은 1번을 선택하세요): ",
-            validation_func=lambda x: x in WRITING_TONES,
-            error_message="잘못된 선택입니다. 1부터 17 사이의 번호를 입력해주세요."
-        )
+        tone_options = [f"{key}: {style} - {description}" for key, (style, description, _) in WRITING_TONES.items()]
+        selected_tone = st.selectbox("문체를 선택해주세요:", tone_options)
+        writing_tone_choice = selected_tone.split(":")[0]
         
         writing_tone, _, writing_tone_description = WRITING_TONES[writing_tone_choice]
         return age, gender, writing_tone, writing_tone_description
@@ -77,52 +48,22 @@ class UserInputManager:
     @staticmethod
     def get_save_info():
         """파일 저장 정보를 입력받습니다."""
-        while True:
-            save_directory = input("결과를 저장할 디렉토리 경로를 입력하세요: ").strip()
+        save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:")
+        filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
+        if save_directory and filename:
             if not os.path.isdir(save_directory):
-                print("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
-                continue
-            filename = input("저장할 파일 이름을 입력하세요 (확장자 제외): ").strip()
-            if not filename:
-                print("파일 이름을 입력해야 합니다.")
-                continue
-            return save_directory, filename
+                st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
+            else:
+                return save_directory, filename
+        return None, None
 
     @staticmethod
     def confirm_action(prompt):
         """사용자에게 작업 수행 여부를 확인합니다."""
-        return UserInputManager._get_valid_input(
-            prompt=f"{prompt} (y/n): ",
-            validation_func=lambda x: x.lower() in ['y', 'n'],
-            error_message="잘못된 입력입니다. y 또는 n을 입력하세요.",
-            transform_func=lambda x: x.lower() == 'y'
-        )
+        return st.radio(prompt, options=["y", "n"]) == 'y'
 
     @staticmethod
     def get_user_choice(prompt, options):
         """사용자에게 여러 옵션 중 하나를 선택하도록 합니다."""
-        print(f"{prompt} ({'/'.join(options)}): ")
-        return UserInputManager._get_valid_input(
-            prompt="선택: ",
-            validation_func=lambda x: x in options,
-            error_message=f"잘못된 선택입니다. {', '.join(options)} 중 하나를 입력하세요."
-        )
-
-    @staticmethod
-    def _get_valid_input(prompt, validation_func, error_message, transform_func=lambda x: x):
-        """유효한 입력을 받을 때까지 사용자에게 입력을 요청합니다."""
-        while True:
-            user_input = input(prompt)
-            if validation_func(user_input):
-                return transform_func(user_input)
-            print(error_message)
-
-    @staticmethod
-    def get_user_choice(prompt, options):
-        """사용자에게 여러 옵션 중 하나를 선택하도록 합니다."""
-        print(f"{prompt} ({'/'.join(options)})")
-        while True:
-            choice = input("선택: ").strip()
-            if choice in options:
-                return choice
-            print(f"잘못된 선택입니다. {', '.join(options)} 중 하나를 입력하세요.")
+        choice = st.selectbox(f"{prompt} ({'/'.join(options)})", options)
+        return choice
