@@ -98,10 +98,11 @@ def main():
             writing_style = writer.get_writing_style()
             writing_length = writer.get_writing_length()
             temperature = writer.get_temperature()
+            user_info = writer.get_user_info()
             
             if st.button("글 생성"):
                 # 6) 글 생성
-                story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature)
+                story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, user_info)
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
 

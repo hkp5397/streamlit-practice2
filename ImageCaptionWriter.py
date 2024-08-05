@@ -8,15 +8,15 @@ class ImageCaptionWriter:
         self.client = OpenAI(api_key=openai_api_key)
 
     def get_user_context(self):
-        return st.text_area("사용자 입력 (선택 사항):", "")
+        return st.text_area("이미지에 대한 추가 정보 :", "")
 
     def get_writing_style(self):
         style = ["1. 일기", "2. SNS(인스타그램, 페이스북 등) 포스팅", "3. 여행기", "4. 중고 상품 판매용 설명글", "5. 음식 후기", "6. 제품 후기", "7. 장소 방문 후기"]
-        selected_style = st.selectbox("글쓰기 스타일을 선택하세요:", style)
+        selected_style = st.selectbox("글 생성 스타일을 선택하세요 :", style)
         return selected_style
     
     def get_writing_length(self):
-        return st.slider("원하는 글 길이를 선택하세요:", min_value=100, max_value=1000, value=300, step=50)
+        return st.slider("원하는 글 생성 길이를 선택하세요:", min_value=100, max_value=1000, value=300, step=50)
 
     def get_temperature(self):
         return st.slider("생성된 글의 창의성 정도를 선택하세요 (0.0 - 1.0):", min_value=0.0, max_value=1.0, value=0.5, step=0.1)
@@ -24,7 +24,7 @@ class ImageCaptionWriter:
     def get_user_info(self):
         age = st.number_input("사용자의 나이를 입력해주세요: ", min_value=0, max_value=120, step=1)
         gender_options = ["남성", "여성"]
-        gender = st.radio("사용자의 성별을 선택해주세요", gender_options)
+        gender = st.radio("사용자의 성별을 선택해주세요", gender_options, index=None)
 
         writing_styles = {
                     "1": ("formal", "존댓말 스타일", """
@@ -438,12 +438,12 @@ class ImageCaptionWriter:
             return datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')
 
 
-    def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature):
+    def write_story(self, image_data_list, user_context, writing_style, writing_length, temperature, user_info):
         sorted_image_data = sorted(image_data_list, key=lambda x: self.parse_date(x['metadata'].get('labeled_exif', {}).get('DateTime', '1900-01-01 00:00:00')))
 
-        age, gender, writing_tone, writing_tone_description = self.get_user_info()
+        age, gender, writing_tone, writing_tone_description = user_info
         
-        user_info = f"""저는 {age}살 {gender}입니다. 
+        user_info = f"""저는 {age}살 {gender}입니다.
         [{writing_tone}] 문체를 적용하여 {writing_style}을 작성해주세요.
         문체 설명: {writing_tone_description}"""
 
