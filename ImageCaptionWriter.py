@@ -24,7 +24,7 @@ class ImageCaptionWriter:
     def get_user_info(self):
         age = st.number_input("사용자의 나이를 입력해주세요: ", min_value=0, max_value=120, step=1)
         gender_options = ["남성", "여성"]
-        gender = st.radio("사용자의 성별을 선택해주세요", gender_options, index=None)
+        gender = st.radio("사용자의 성별을 선택해주세요", gender_options)
 
         writing_styles = {
                     "1": ("formal", "존댓말 스타일", """
