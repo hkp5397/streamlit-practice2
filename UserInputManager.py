@@ -51,7 +51,7 @@ class UserInputManager:
     @staticmethod
     def get_save_info():
         """파일 저장 정보를 입력받습니다."""
-        save_directory = get_downloads_folder()
+        save_directory = get_downloads_folder
         filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename")
         
         if save_directory and filename:
