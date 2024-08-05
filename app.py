@@ -5,11 +5,10 @@ from ContentGenerator import ContentGenerator
 from UserInputManager import UserInputManager
 from datetime import datetime
 from pathlib import Path
-import io
 
 # 사용자로부터 이미지 파일 경로 입력받기
 def get_image_paths():
-    uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="image_uploader")
+    uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="image_uploader_file_uploader")
 
     if uploaded_files:
         if not os.path.exists("temp"):
@@ -38,7 +37,7 @@ def process_images(processor, image_paths):
 
 # 처리된 이미지 정보 출력
 def print_image_info(result):
-    st.image(result['image_path'], caption=os.path.basename(result['image_path']))
+    st.image(result['image_path'], caption=os.path.basename(result['image_path']), key=f"image_{os.path.basename(result['image_path'])}")
     st.write("메타데이터:")
     if 'metadata' in result and 'labeled_exif' in result['metadata']:
         st.write(f"  라벨링된 EXIF: {result['metadata']['labeled_exif']}")
@@ -49,16 +48,16 @@ def print_image_info(result):
 
 # 이미지 캡션 저장 (파일 형태)
 def save_captions(image_data_list):
-    save_path = UserInputManager.get_save_info()  # get_save_info() 호출
+    save_path = UserInputManager.get_save_info()
+    content = "\n".join([f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                        f"이미지에 대한 캡션: {data['caption']}\n" for data in image_data_list])
     if save_path:
-        content = "\n".join([f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                            f"이미지에 대한 캡션: {data['caption']}\n" for data in image_data_list])
         st.download_button(
             label="캡션 저장",
             data=content,
             file_name=os.path.basename(save_path),
             mime="text/plain",
-            key="download_captions"
+            key="download_captions_button"
         )
     else:
         st.warning("저장할 파일 이름을 입력하세요.")
@@ -128,29 +127,20 @@ def create_content_for_saving(story, hashtags, image_paths):
     return content
 
 def main():
-    st.title("이미지 처리 및 캡션 생성기")
+    st.title("이미지 기반 콘텐츠 생성기")
 
-    # API 키는 화면에서 직접 입력
-    openai_api_key = st.text_input("OpenAI API 키를 입력하세요:", type="password")
-    if not openai_api_key:
-        st.warning("OpenAI API 키를 입력해주세요.")
-        return
-
+    # 이미지 업로드
     image_paths = get_image_paths()
-    if not image_paths:
-        st.write("처리할 이미지가 없습니다.")
-        return
+    if image_paths:
+        processor = ImageProcessor()
+        image_data_list = process_images(processor, image_paths)
 
-    processor = ImageProcessor(openai_api_key)
-    writer = ContentGenerator(openai_api_key)
-    
-    image_data_list = process_images(processor, image_paths)
-    
-    if image_data_list:
-        save_captions(image_data_list)
-        story = generate_story(writer, image_data_list)
-        hashtags = generate_hashtags(writer, story)
-        save_results(story, hashtags, image_paths)
+        if image_data_list:
+            writer = ContentGenerator()
+            save_captions(image_data_list)
+            story = generate_story(writer, image_data_list)
+            hashtags = generate_hashtags(writer, story)
+            save_results(story, hashtags, image_paths)
 
 if __name__ == "__main__":
     main()
