@@ -130,7 +130,7 @@ def main():
                 
                 if len(filename) > 0:
                 
-                    if st.button("저장하기", key="save_hashtags"):
+                    # if st.button("저장하기", key="save_hashtags"):
                         content = ""
                         for data in image_data_list:
                             content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
@@ -150,7 +150,7 @@ def main():
                 
                 if len(filename) > 0:
                 
-                    if st.button("저장하기", key="save_story"):
+                    # if st.button("저장하기", key="save_story"):
                         content = ""
                         for data in image_data_list:
                             content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
