@@ -57,14 +57,14 @@ def main():
             result = processor.process_image(image_path)
             image_data_list.append(result)
             st.image(image_path, caption=os.path.basename(image_path))
-            st.write("<< 메타데이터 >>")
+            st.write("<<<<<<<<<< 메타데이터 >>>>>>>>>>")
             if 'metadata' in result and 'labeled_exif' in result['metadata']:
                 st.write(f"  라벨링된 EXIF : {result['metadata']['labeled_exif']}")
                 st.write(f"  위치 정보 : {result['metadata']['location_info']}")
             else:
                 st.write("  메타데이터가 없습니다.")
                 
-            st.write(f"<< 생성된 캡션 >>")
+            st.write(f"<<<<<<<<<< 생성된 캡션 >>>>>>>>>>")
             st.write(f"{result['caption']}")
         except Exception as e:
             st.error(f"예상치 못한 오류 발생 : {e} - 이미지 처리를 건너뜁니다.")
@@ -89,7 +89,7 @@ def main():
                     mime = "text/plain"
                 )
 
-        elif choice == '글 생성':
+        elif choice == '글 생성':   
             # 5-2) 글 생성 준비
             user_context = writer.get_user_context()
             writing_style = writer.get_writing_style()
@@ -98,7 +98,7 @@ def main():
 
             # 6) 글 생성
             story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature)
-            st.write("생성된 글:")
+            st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
             st.write(story)
 
             # 7) 해시태그 생성 여부 선택
@@ -107,7 +107,7 @@ def main():
             if generate_hashtags:
                 # 8-2) 해시태그 생성 및 모든 내용 저장
                 hashtags = writer.generate_hashtags(story)
-                st.write("생성된 해시태그:")
+                st.write(f"<<<<<<<<<< 생성된 해시태그 >>>>>>>>>>")
                 st.write(hashtags)
                 
                 filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_hashtags")
