@@ -104,6 +104,9 @@ def main():
             generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
             generate_writing = st.button("글 생성")
             
+            st.write(f"generate_hashtags => {generate_hashtags}")
+            st.write(f"generate_writing => {generate_writing}")
+            
             if generate_writing:
                 # 6) 글 생성
                 story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, user_info)
