@@ -103,7 +103,11 @@ def main():
             filename = ''
             
             if len(story) == 0:
-                st.button("글 생성")
+                if st.button("글 생성"):
+                    # 6) 글 생성
+                    story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, user_info)
+                    st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
+                    st.write(story)
             else:
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
