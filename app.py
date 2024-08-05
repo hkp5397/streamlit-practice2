@@ -7,7 +7,11 @@ from datetime import datetime
 from pathlib import Path
 import io
 
-# 기존의 get_downloads_folder 함수는 삭제합니다.
+def get_downloads_folder():
+    """사용자의 다운로드 폴더 경로를 반환합니다."""
+    home = Path.home()
+    downloads_folder = home / "Downloads"
+    return downloads_folder
 
 # 사용자로부터 이미지 파일 경로 입력받기
 def get_image_paths():
