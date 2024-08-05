@@ -51,12 +51,13 @@ class UserInputManager:
         """파일 저장 정보를 입력받습니다."""
         save_directory = st.text_input("결과를 저장할 디렉토리 경로를 입력하세요:")
         filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
+        
         if save_directory and filename:
-            if not os.path.isdir(save_directory):
-                st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
+            if os.path.isdir(save_directory):
+                return os.path.join(save_directory, f"{filename}.txt")
             else:
-                return save_directory, filename
-        return None, None
+                st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")    
+        return ""
 
     @staticmethod
     def confirm_action(prompt):
