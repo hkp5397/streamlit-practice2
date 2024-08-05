@@ -115,6 +115,8 @@ def main():
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
                 
+            st.write(f"story => {len(story)}")
+                
             # 7) 해시태그 생성 여부
             if generate_hashtags:
                 # 8-2) 해시태그 생성 및 모든 내용 저장
