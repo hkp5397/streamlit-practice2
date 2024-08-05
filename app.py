@@ -98,6 +98,7 @@ def main():
             writing_length = writer.get_writing_length()
             temperature = writer.get_temperature()
             user_info = writer.get_user_info()
+            story = ''
             
             if st.button("글 생성"):
                 # 6) 글 생성
