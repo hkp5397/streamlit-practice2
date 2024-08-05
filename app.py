@@ -8,7 +8,7 @@ from pathlib import Path
 
 # 사용자로부터 이미지 파일 경로 입력받기
 def get_image_paths():
-    uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"], key="image_uploader_file_uploader")
+    uploaded_files = st.file_uploader("이미지를 업로드하세요", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
 
     if uploaded_files:
         if not os.path.exists("temp"):
