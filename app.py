@@ -78,7 +78,6 @@ def main():
             filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
             
             if len(filename) > 0:
-                
                 if st.button("캡션 저장"):
                     content = ""
                     for data in image_data_list:
@@ -105,7 +104,8 @@ def main():
                 story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, user_info)
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
-
+                
+            if len(story) > 0:
                 # 7) 해시태그 생성 여부 선택
                 generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
 
