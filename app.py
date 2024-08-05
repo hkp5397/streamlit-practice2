@@ -108,7 +108,7 @@ def save_results(story, hashtags, image_paths):
                     data=content,
                     file_name=os.path.basename(save_path),
                     mime="text/plain",
-                    key="download_results"
+                    key="download_results_button"
                 )
             else:
                 st.warning("저장할 파일 이름을 입력하세요.")
