@@ -98,6 +98,7 @@ def main():
             writing_length = writer.get_writing_length()
             temperature = writer.get_temperature()
             user_info = writer.get_user_info()
+            generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
             story = ''
             
             if st.button("글 생성"):
@@ -108,7 +109,6 @@ def main():
                 
             if len(story) > 0:
                 # 7) 해시태그 생성 여부 선택
-                generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
 
                 if generate_hashtags:
                     # 8-2) 해시태그 생성 및 모든 내용 저장
