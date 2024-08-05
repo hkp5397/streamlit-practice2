@@ -66,83 +66,84 @@ def main():
             st.write(f"생성된 캡션: {result['caption']}")
         except Exception as e:
             st.error(f"예상치 못한 오류 발생: {e} - 이미지 처리를 건너뜁니다.")
-
-    # 4) 캡션만 저장할지 글 생성할지 선택
-    choice = st.radio("캡션만 저장하시겠습니까? 아니면 글을 생성하시겠습니까?", ("캡션", "글"))
-
-    if choice == '캡션':
-        # 5-1) 캡션만 저장
-        filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
-        if st.button("저장 준비"):
-            content = ""
-            for data in image_data_list:
-                content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                content += f"이미지에 대한 캡션: {data['caption']}\n\n"
-            # save_to_file(content, filename)
-            st.download_button(
-                label="파일 저장하기",
-                data = content,
-                file_name = filename + '.txt',
-                mime = "text/plain"
-            )
-
-    elif choice == '글':
-        # 5-2) 글 생성 준비
-        user_context = writer.get_user_context()
-        writing_style = writer.get_writing_style()
-        writing_length = writer.get_writing_length()
-        temperature = writer.get_temperature()
-
-        # 6) 글 생성
-        story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature)
-        st.write("생성된 글:")
-        st.write(story)
-
-        # 7) 해시태그 생성 여부 선택
-        generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
-
-        if generate_hashtags:
-            # 8-2) 해시태그 생성 및 모든 내용 저장
-            hashtags = writer.generate_hashtags(story)
-            st.write("생성된 해시태그:")
-            st.write(hashtags)
             
-            filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_hashtags")
-            if st.button("저장하기", key="save_hashtags"):
-                content = ""
-                for data in image_data_list:
-                    content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                    content += f"이미지에 대한 캡션: {data['caption']}\n\n"
-                content += f"글: {story}\n\n"
-                content += f"해시태그: {hashtags}\n"
-                # save_to_file(content, filename)
-                st.download_button(
-                    label="파일 저장하기",
-                    data = content,
-                    file_name = filename  + '.txt',
-                    mime = "text/plain"
-                )
-        else:
-            # 8-1) 글까지만 저장
-            filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_story")
-            if st.button("저장하기", key="save_story"):
-                content = ""
-                for data in image_data_list:
-                    content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                    content += f"이미지에 대한 캡션: {data['caption']}\n\n"
-                content += f"글: {story}\n"
-                # save_to_file(content, filename)
-                st.download_button(
-                    label="파일 저장하기",
-                    data = content,
-                    file_name = filename  + '.txt',
-                    mime = "text/plain"
-                )
-    else:
-        st.warning("잘못된 선택입니다. 프로그램을 종료합니다.")
+    if (len(image_data_list) > 0):
+        # 4) 캡션만 저장할지 글 생성할지 선택
+        choice = st.radio("캡션만 저장하시겠습니까? 아니면 글을 생성하시겠습니까?", ("캡션", "글"))
 
-    # # 9) 프로그램 종료
-    # st.write("프로그램을 종료합니다.")
+        if choice == '캡션':
+            # 5-1) 캡션만 저장
+            filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
+            if st.button("저장 준비"):
+                content = ""
+                for data in image_data_list:
+                    content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                    content += f"이미지에 대한 캡션: {data['caption']}\n\n"
+                # save_to_file(content, filename)
+                st.download_button(
+                    label="파일 저장하기",
+                    data = content,
+                    file_name = filename + '.txt',
+                    mime = "text/plain"
+                )
+
+        elif choice == '글':
+            # 5-2) 글 생성 준비
+            user_context = writer.get_user_context()
+            writing_style = writer.get_writing_style()
+            writing_length = writer.get_writing_length()
+            temperature = writer.get_temperature()
+
+            # 6) 글 생성
+            story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature)
+            st.write("생성된 글:")
+            st.write(story)
+
+            # 7) 해시태그 생성 여부 선택
+            generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
+
+            if generate_hashtags:
+                # 8-2) 해시태그 생성 및 모든 내용 저장
+                hashtags = writer.generate_hashtags(story)
+                st.write("생성된 해시태그:")
+                st.write(hashtags)
+                
+                filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_hashtags")
+                if st.button("저장하기", key="save_hashtags"):
+                    content = ""
+                    for data in image_data_list:
+                        content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                        content += f"이미지에 대한 캡션: {data['caption']}\n\n"
+                    content += f"글: {story}\n\n"
+                    content += f"해시태그: {hashtags}\n"
+                    # save_to_file(content, filename)
+                    st.download_button(
+                        label="파일 저장하기",
+                        data = content,
+                        file_name = filename  + '.txt',
+                        mime = "text/plain"
+                    )
+            else:
+                # 8-1) 글까지만 저장
+                filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="filename_story")
+                if st.button("저장하기", key="save_story"):
+                    content = ""
+                    for data in image_data_list:
+                        content += f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                        content += f"이미지에 대한 캡션: {data['caption']}\n\n"
+                    content += f"글: {story}\n"
+                    # save_to_file(content, filename)
+                    st.download_button(
+                        label="파일 저장하기",
+                        data = content,
+                        file_name = filename  + '.txt',
+                        mime = "text/plain"
+                    )
+        else:
+            st.warning("잘못된 선택입니다. 프로그램을 종료합니다.")
+
+        # # 9) 프로그램 종료
+        # st.write("프로그램을 종료합니다.")
 
 if __name__ == "__main__":
     main()
