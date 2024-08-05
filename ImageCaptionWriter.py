@@ -27,7 +27,7 @@ class ImageCaptionWriter:
         gender = st.radio("사용자의 성별을 선택해주세요", gender_options)
 
         writing_styles = {
-                    "1": ("formal", "존댓말 스타일", """
+                        "1": ("formal", "존댓말 스타일", """
                             - '-습니다', '-니다'를 사용하여 정중하고 공식적인 말투로 작성해주세요.
                             - 문장을 완전하게 끝맺어주세요.
                             - 존칭을 사용하고, 격식있는 어휘를 선택해주세요.
