@@ -52,19 +52,16 @@ class UserInputManager:
     def get_save_info():
         """파일 저장 정보를 입력받습니다."""
         save_directory = get_downloads_folder()
-        
-        # 고유한 키를 사용하여 텍스트 입력 위젯 생성
         filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename_input")
         
-        # 버튼을 눌러서 경로를 확인하도록 수정
-        if st.button("저장 경로 확인"):
-            if filename:
-                if os.path.isdir(save_directory):
+        if filename:
+            if os.path.isdir(save_directory):
+                if st.button("저장 경로 확인", key="check_save_path_button"):
                     return os.path.join(save_directory, f"{filename}.txt")
-                else:
-                    st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
             else:
-                st.error("파일 이름을 입력해주세요.")
+                st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
+        else:
+            st.error("파일 이름을 입력해주세요.")
         
         return ""
 
