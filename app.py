@@ -49,10 +49,10 @@ def print_image_info(result):
 
 # 이미지 캡션 저장 (파일 형태)
 def save_captions(image_data_list):
-    save_path = UserInputManager.get_save_info()
-    content = "\n".join([f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
-                        f"이미지에 대한 캡션: {data['caption']}\n" for data in image_data_list])
+    save_path = UserInputManager.get_save_info()  # get_save_info() 호출
     if save_path:
+        content = "\n".join([f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
+                            f"이미지에 대한 캡션: {data['caption']}\n" for data in image_data_list])
         st.download_button(
             label="캡션 저장",
             data=content,
