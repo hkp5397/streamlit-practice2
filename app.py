@@ -48,7 +48,7 @@ def print_image_info(result):
 
 # 이미지 캡션 저장 (파일 형태)
 def save_captions(image_data_list):
-    save_path = UserInputManager.get_save_info()  # get_save_info() 호출
+    save_path = UserInputManager.get_save_info_4caption()
     if save_path:
         content = "\n".join([f"{os.path.basename(data['image_path'])}({data['image_path']})\n"
                             f"이미지에 대한 캡션: {data['caption']}\n" for data in image_data_list])
@@ -98,7 +98,7 @@ def generate_hashtags(writer, story):
 # 생성 결과 파일로 저장
 def save_results(story, hashtags, image_paths):
     if UserInputManager.confirm_action("결과를 파일에 저장하시겠습니까?"):
-        save_path = UserInputManager.get_save_info()
+        save_path = UserInputManager.get_save_info_4result_file()
         content = create_content_for_saving(story, hashtags, image_paths)
         if content.strip():
             if save_path:

@@ -56,11 +56,26 @@ class UserInputManager:
         writing_tone, _, writing_tone_description = WRITING_TONES[writing_tone_choice]
         return age, gender, writing_tone, writing_tone_description
 
+    # @staticmethod
+    # def get_save_info():
+    #     """파일 저장 정보를 입력받습니다."""
+    #     save_directory = get_downloads_folder()
+    #     filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename_text_input")
+        
+    #     if filename:
+    #         if os.path.isdir(save_directory):
+    #             return os.path.join(save_directory, f"{filename}.txt")
+    #         else:
+    #             st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
+    #     else:
+    #         st.error("파일 이름을 입력해주세요.")
+    #     return ""
+    
     @staticmethod
-    def get_save_info():
-        """파일 저장 정보를 입력받습니다."""
+    def get_save_info_4caption():
+        """이미지 캡션 함수에 쓰일 파일 저장 정보를 입력받습니다."""
         save_directory = get_downloads_folder()
-        filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename_text_input")
+        filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename_text_input_imagecaption")
         
         if filename:
             if os.path.isdir(save_directory):
@@ -70,6 +85,22 @@ class UserInputManager:
         else:
             st.error("파일 이름을 입력해주세요.")
         return ""
+
+    @staticmethod
+    def get_save_info_4result_file():
+        """결과 파일 저장 함수에 쓰일 파일 저장 정보를 입력받습니다."""
+        save_directory = get_downloads_folder()
+        filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):", key="save_filename_text_input_resultfile")
+        
+        if filename:
+            if os.path.isdir(save_directory):
+                return os.path.join(save_directory, f"{filename}.txt")
+            else:
+                st.error("유효하지 않은 디렉토리입니다. 다시 시도해주세요.")
+        else:
+            st.error("파일 이름을 입력해주세요.")
+        return ""
+
 
     @staticmethod
     def confirm_action(prompt):
