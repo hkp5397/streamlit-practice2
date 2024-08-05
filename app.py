@@ -6,6 +6,8 @@ from datetime import datetime
 from pathlib import Path
 import io
 
+writing = ''
+
 def get_downloads_folder():
     home = Path.home()
     downloads_folder = home / "Downloads"
@@ -25,6 +27,7 @@ def get_downloads_folder():
 #         st.error(f"파일 저장 중 오류 발생: {e}")
 
 def main():
+    global writing
     st.title("이미지 캡션/글/해시태그 생성")
 
     # 1) API 키 입력 받기
@@ -99,7 +102,6 @@ def main():
             temperature = writer.get_temperature()
             user_info = writer.get_user_info()
             
-            story = ''
             filename = ''
             generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
             generate_writing = st.button("글 생성", key="generate_writing")
@@ -112,10 +114,11 @@ def main():
             if generate_writing:
                 # 6) 글 생성
                 story = writer.write_story(image_data_list, user_context, writing_style, writing_length, temperature, user_info)
+                writing = story
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
                 
-            st.write(f"story => {len(story)}")
+            st.write(f"story => {len(writing)}")
                 
             # 7) 해시태그 생성 여부
             if generate_hashtags:
