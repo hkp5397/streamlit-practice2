@@ -102,11 +102,11 @@ def main():
             temperature = writer.get_temperature()
             user_info = writer.get_user_info()
             
+            story = ''
             filename = ''
             generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
             generate_writing = st.button("글 생성", key="generate_writing")
             
-            st.write(f"filename => {len(filename)}")
             st.write(f"generate_hashtags => {generate_hashtags}")
             st.write(f"generate_writing => {generate_writing}")
             
