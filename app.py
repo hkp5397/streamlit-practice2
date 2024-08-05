@@ -71,10 +71,9 @@ def main():
             
     if (len(image_data_list) > 0):
         # 4) 캡션만 저장할지 글 생성할지 선택
-        st.write(f"st.session_state => {st.session_state.get('first_time')}")
-        choice = st.radio("캡션만 저장하시겠습니까? 아니면 글을 생성하시겠습니까?", ("캡션", "글"), index=None)
+        choice = st.radio("캡션만 저장하시겠습니까? 아니면 글을 생성하시겠습니까?", ("캡션만 저장", "글 생성"), index=None)
 
-        if choice == '캡션':
+        if choice == '캡션만 저장':
             # 5-1) 캡션만 저장
             filename = st.text_input("저장할 파일 이름을 입력하세요 (확장자 제외):")
             if st.button("저장 준비"):
@@ -90,7 +89,7 @@ def main():
                     mime = "text/plain"
                 )
 
-        elif choice == '글':
+        elif choice == '글 생성':
             # 5-2) 글 생성 준비
             user_context = writer.get_user_context()
             writing_style = writer.get_writing_style()
@@ -143,7 +142,7 @@ def main():
                         mime = "text/plain"
                     )
         else:
-            st.warning("잘못된 선택입니다. 프로그램을 종료합니다.")
+            st.warning("캡션만 저장, 글 생성 중 선택하시기 바랍니다.")
 
         # # 9) 프로그램 종료
         # st.write("프로그램을 종료합니다.")
