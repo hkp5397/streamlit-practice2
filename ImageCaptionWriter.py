@@ -424,7 +424,7 @@ class ImageCaptionWriter:
                     20. "다른 알렉시스에서 지식 궁수 찾아라! - 이 이상 좋게 줄 수 없다!"
                 """)
                 }        
-        st.write("문체를 선택해주세요:")
+        # st.write("문체를 선택해주세요:")
         writing_tone_choice = st.selectbox("문체를 선택해주세요:", options=list(writing_styles.keys()), format_func=lambda x: f"{writing_styles[x][0]} - {writing_styles[x][1]}")
 
         writing_tone, writing_tone_description = writing_styles[writing_tone_choice][0], writing_styles[writing_tone_choice][2]
