@@ -108,7 +108,7 @@ def main():
                 st.write(f"<<<<<<<<<< 생성된 글 >>>>>>>>>>")
                 st.write(story)
                 
-            if len(story) > 0:
+            # if len(story) > 0:
                 # 7) 해시태그 생성 여부 선택
 
                 if generate_hashtags:
