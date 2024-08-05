@@ -57,15 +57,17 @@ def main():
             result = processor.process_image(image_path)
             image_data_list.append(result)
             st.image(image_path, caption=os.path.basename(image_path))
-            st.write("메타데이터:")
+            st.write("< 메타데이터 >")
             if 'metadata' in result and 'labeled_exif' in result['metadata']:
-                st.write(f"  라벨링된 EXIF: {result['metadata']['labeled_exif']}")
-                st.write(f"  위치 정보: {result['metadata']['location_info']}")
+                st.write(f"  라벨링된 EXIF : {result['metadata']['labeled_exif']}")
+                st.write(f"  위치 정보 : {result['metadata']['location_info']}")
             else:
                 st.write("  메타데이터가 없습니다.")
-            st.write(f"생성된 캡션: {result['caption']}")
+                
+            st.write(f"< 생성된 캡션 >")
+            st.write(f"{result['caption']}")
         except Exception as e:
-            st.error(f"예상치 못한 오류 발생: {e} - 이미지 처리를 건너뜁니다.")
+            st.error(f"예상치 못한 오류 발생 : {e} - 이미지 처리를 건너뜁니다.")
             
     if (len(image_data_list) > 0):
         # 4) 캡션만 저장할지 글 생성할지 선택
