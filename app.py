@@ -102,7 +102,7 @@ def main():
             story = ''
             filename = ''
             generate_hashtags = st.checkbox("해시태그를 생성하시겠습니까?")
-            generate_writing = st.button("글 생성")
+            generate_writing = st.button("글 생성", key="generate_writing")
             
             st.write(f"story => {len(story)}")
             st.write(f"filename => {len(filename)}")
@@ -135,7 +135,7 @@ def main():
                         content += f"해시태그: {hashtags}\n"
                         # save_to_file(content, filename)
                         st.download_button(
-                            label="파일 저장하기",
+                            label="파일 다운로드",
                             data = content,
                             file_name = filename  + '.txt',
                             mime = "text/plain"
@@ -154,7 +154,7 @@ def main():
                         content += f"글: {story}\n"
                         # save_to_file(content, filename)
                         st.download_button(
-                            label="파일 저장하기",
+                            label="파일 다운로드",
                             data = content,
                             file_name = filename  + '.txt',
                             mime = "text/plain"
